@@ -1,0 +1,47 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f6f7f5;
+  color: #1c2320;
+  margin: 0;
+}
+
+header {
+  background: #1f6f5c;
+  color: white;
+  padding: 16px 24px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.container {
+  max-width: 700px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+.car-list {
+  list-style: none;
+  padding: 0;
+}
+
+.car-list li {
+  background: white;
+  border: 1px solid #e2e6e3;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.price {
+  font-weight: bold;
+  color: #1f6f5c;
+}

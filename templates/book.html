@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Book {{ car.make }} {{ car.model }}</h2>
+  <form method="post">
+    <label>Your name</label>
+    <input type="text" name="name" required>
+
+    <label>Email</label>
+    <input type="email" name="email">
+
+    <label>Phone</label>
+    <input type="tel" name="phone">
+
+    <label>Start date</label>
+    <input type="date" name="start_date" required>
+
+    <label>End date</label>
+    <input type="date" name="end_date" required>
+
+    <button type="submit">Request booking</button>
+  </form>
+{% endblock %}

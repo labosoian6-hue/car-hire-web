@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <ul class="car-list">
+    {% for car in cars %}
+      <li>{{ car.make }} {{ car.model }} <span class="price">${{ car.day_rate }}/day</span> <a href="{{ url_for('book_car', car_id=car.id) }}">Book</a></li>
+    {% endfor %}
+  </ul>
+{% endblock %}
