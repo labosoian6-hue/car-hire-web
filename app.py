@@ -17,6 +17,25 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-only-fallback-key")
 login_manager = LoginManager(app)
 login_manager.login_view = "admin_login"
 
+with app.app_context():
+    db.create_all()
+
+    if not Car.query.first():
+        db.session.add(Car(make="Toyota", model="Corolla", day_rate=75))
+        db.session.add(Car(make="Mazda", model="CX-5", day_rate=110))
+        db.session.add(Car(make="Ford", model="Ranger", day_rate=140))
+        db.session.commit()
+        print("Seeded initial cars.")
+
+    admin_username = os.environ.get("ADMIN_USERNAME", "admin")
+    admin_password = os.environ.get("ADMIN_PASSWORD", "changeme123")
+    if not AdminUser.query.filter_by(username=admin_username).first():
+        user = AdminUser(username=admin_username)
+        user.set_password(admin_password)
+        db.session.add(user)
+        db.session.commit()
+        print(f"Created admin user '{admin_username}'.")
+
 @login_manager.user_loader
 def load_user(user_id):
     return AdminUser.query.get(int(user_id))
