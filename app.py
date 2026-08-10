@@ -7,6 +7,8 @@ from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from models import db, Car, Renter, Booking, AdminUser, Payment
+import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///carhire.db"
@@ -16,6 +18,13 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-only-fallback-key")
 
 login_manager = LoginManager(app)
 login_manager.login_view = "admin_login"
+
+UPLOAD_FOLDER = os.path.join(app.root_path, "static", "uploads")
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 with app.app_context():
     db.create_all()
@@ -116,6 +125,35 @@ def admin_booking_approve(booking_id):
     booking.status = "approved"
     db.session.commit()
     return redirect(url_for("admin_bookings"))
+@app.route("/admin/cars")
+@login_required
+def admin_cars():
+    cars = Car.query.all()
+    return render_template("admin_cars.html", cars=cars)
+
+
+@app.route("/admin/cars/new", methods=["GET", "POST"])
+@login_required
+def admin_car_new():
+    if request.method == "POST":
+        car = Car(
+            make=request.form.get("make"),
+            model=request.form.get("model"),
+            day_rate=float(request.form.get("day_rate")),
+        )
+        db.session.add(car)
+        db.session.commit()
+
+        photo = request.files.get("photo")
+        if photo and photo.filename and allowed_file(photo.filename):
+            filename = f"{car.id}_{secure_filename(photo.filename)}"
+            photo.save(os.path.join(UPLOAD_FOLDER, filename))
+            car.image_filename = filename
+            db.session.commit()
+
+        return redirect(url_for("admin_cars"))
+
+    return render_template("admin_car_form.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

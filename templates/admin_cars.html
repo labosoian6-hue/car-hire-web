@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <h2>Cars</h2>
+    <a href="{{ url_for('admin_car_new') }}" class="btn">+ Add car</a>
+  </div>
+  <ul class="car-list">
+    {% for car in cars %}
+      <li>
+        {% if car.image_filename %}
+          <img src="{{ url_for('static', filename='uploads/' + car.image_filename) }}" style="width:60px; height:60px; object-fit:cover; border-radius:6px;">
+        {% endif %}
+        {{ car.make }} {{ car.model }} <span class="price">${{ car.day_rate }}/day</span>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

@@ -7,3 +7,12 @@
     {% endfor %}
   </ul>
 {% endblock %}
+{% for car in cars %}
+  <li>
+    {% if car.image_filename %}
+      <img src="{{ url_for('static', filename='uploads/' + car.image_filename) }}" style="width:70px; height:70px; object-fit:cover; border-radius:6px; margin-right:12px;">
+    {% endif %}
+    {{ car.make }} {{ car.model }} <span class="price">${{ car.day_rate }}/day</span>
+    <a href="{{ url_for('book_car', car_id=car.id) }}">Book</a>
+  </li>
+{% endfor %}

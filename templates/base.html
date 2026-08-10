@@ -5,14 +5,13 @@
   <title>{% block title %}Ian's Car Hire{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<header>
-  <h1>Ian's Car Hire</h1>
-  <nav>
-    <a href="{{ url_for('admin_home') }}" style="color: white;">Admin</a>
-  </nav>
-</header>
 <body>
-  <header><h1>Ian's Car Hire</h1></header>
+  <header>
+    <h1>Ian's Car Hire</h1>
+    <nav>
+      <a href="{{ url_for('admin_home') }}" style="color: white;">Admin</a>
+    </nav>
+  </header>
   <div class="container">
     {% block content %}{% endblock %}
   </div>

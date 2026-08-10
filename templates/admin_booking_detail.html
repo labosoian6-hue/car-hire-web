@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
   <h2>{{ booking.car.make }} {{ booking.car.model }} — {{ booking.renter.name }}</h2>
-  <p>{{ booking.start_date }} to {{ booking.end_date }} — status: {{ booking.status }}</p>
+  <p>{{ booking.start_date }} to {{ booking.end_date }} —
+  <span class="badge badge-{{ booking.status }}">{{ booking.status }}</span></p>
 
-  {% if booking.status == "pending" %}
-    <form method="post" action="{{ url_for('admin_booking_approve', booking_id=booking.id) }}">
-      <button type="submit">Approve booking</button>
-    </form>
-  {% endif %}
-
+{% if booking.status == "pending" %}
+  <form method="post" action="{{ url_for('admin_booking_approve', booking_id=booking.id) }}">
+    <button type="submit" class="btn">Approve booking</button>
+  </form>
+{% endif %}
   <h3>Payments</h3>
   <ul>
     {% for p in booking.payments %}

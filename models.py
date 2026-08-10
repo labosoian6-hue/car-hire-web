@@ -1,4 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
 
@@ -8,6 +10,7 @@ class Car(db.Model):
     make = db.Column(db.String(80), nullable=False)
     model = db.Column(db.String(80), nullable=False)
     day_rate = db.Column(db.Float, nullable=False)
+    image_filename = db.Column(db.String(255))
     bookings = db.relationship("Booking", backref="car")
 
     def is_available(self, start, end):
@@ -39,10 +42,7 @@ class Payment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     booking_id = db.Column(db.Integer, db.ForeignKey("booking.id"), nullable=False)
     amount = db.Column(db.Float, nullable=False)
-from flask_login import UserMixin
-from werkzeug.security import generate_password_hash, check_password_hash
 
-# ... your existing Car, Renter, Booking classes stay as they are ...
 
 class AdminUser(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)

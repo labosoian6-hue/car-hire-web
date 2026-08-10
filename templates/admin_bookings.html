@@ -3,11 +3,12 @@
   <h2>Bookings</h2>
   <ul>
     {% for b in bookings %}
-      <li>
-        {{ b.car.make }} {{ b.car.model }} — {{ b.renter.name }} —
-        {{ b.start_date }} to {{ b.end_date }} — status: {{ b.status }}
-        <a href="{{ url_for('admin_booking_detail', booking_id=b.id) }}">View</a>
-      </li>
+      <li class="card">
+  {{ b.car.make }} {{ b.car.model }} — {{ b.renter.name }} —
+  {{ b.start_date }} to {{ b.end_date }} —
+  <span class="badge badge-{{ b.status }}">{{ b.status }}</span>
+  <a href="{{ url_for('admin_booking_detail', booking_id=b.id) }}">View</a>
+</li>
     {% endfor %}
   </ul>
 {% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Add a Car</h2>
+  <form method="post" enctype="multipart/form-data">
+    <label>Make</label>
+    <input type="text" name="make" required>
+
+    <label>Model</label>
+    <input type="text" name="model" required>
+
+    <label>Day rate ($)</label>
+    <input type="number" step="0.01" name="day_rate" required>
+
+    <label>Photo</label>
+    <input type="file" name="photo" accept="image/*">
+
+    <button type="submit" class="btn">Add car</button>
+  </form>
+{% endblock %}
