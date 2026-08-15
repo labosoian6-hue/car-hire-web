@@ -9,7 +9,7 @@ class Car(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     make = db.Column(db.String(80), nullable=False)
     model = db.Column(db.String(80), nullable=False)
-    day_rate = db.Column(db.Float, nullable=False)
+    week_rate = db.Column(db.Float, nullable=False)
     image_filename = db.Column(db.String(255))
     bookings = db.relationship("Booking", backref="car")
 

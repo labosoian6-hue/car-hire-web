@@ -65,6 +65,8 @@ header nav a { color: white; font-weight: 600; }
   text-decoration: none;
 }
 .btn:hover { background: var(--brand-dark); text-decoration: none; }
+.btn-danger { background: #b3261e; }
+.btn-danger:hover { background: #8f1f19; }
 
 form { max-width: 420px; }
 form label { display: block; font-weight: 600; margin: 14px 0 4px; font-size: 0.9rem; }

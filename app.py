@@ -7,7 +7,6 @@ from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from models import db, Car, Renter, Booking, AdminUser, Payment
-import os
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -21,7 +20,7 @@ login_manager.login_view = "admin_login"
 
 UPLOAD_FOLDER = os.path.join(app.root_path, "static", "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp", "avif"}
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -30,9 +29,9 @@ with app.app_context():
     db.create_all()
 
     if not Car.query.first():
-        db.session.add(Car(make="Toyota", model="Corolla", day_rate=75))
-        db.session.add(Car(make="Mazda", model="CX-5", day_rate=110))
-        db.session.add(Car(make="Ford", model="Ranger", day_rate=140))
+        db.session.add(Car(make="Toyota", model="Corolla", week_rate=350))
+        db.session.add(Car(make="Mazda", model="CX-5", week_rate=550))
+        db.session.add(Car(make="Ford", model="Ranger", week_rate=700))
         db.session.commit()
         print("Seeded initial cars.")
 
@@ -74,10 +73,17 @@ def book_car(car_id):
         return f"Booking confirmed for {car.make} {car.model}, {start} to {end}!"
 
     return render_template("book.html", car=car)
+
 @app.route("/")
 def home():
     cars = Car.query.all()
     return render_template("home.html", cars=cars)
+
+@app.route("/cars/<int:car_id>")
+def car_detail(car_id):
+    car = Car.query.get_or_404(car_id)
+    return render_template("car_detail.html", car=car)
+
 @app.route("/admin/login", methods=["GET", "POST"])
 def admin_login():
     if request.method == "POST":
@@ -125,6 +131,7 @@ def admin_booking_approve(booking_id):
     booking.status = "approved"
     db.session.commit()
     return redirect(url_for("admin_bookings"))
+
 @app.route("/admin/cars")
 @login_required
 def admin_cars():
@@ -139,7 +146,7 @@ def admin_car_new():
         car = Car(
             make=request.form.get("make"),
             model=request.form.get("model"),
-            day_rate=float(request.form.get("day_rate")),
+            week_rate=float(request.form.get("week_rate")),
         )
         db.session.add(car)
         db.session.commit()
@@ -155,6 +162,17 @@ def admin_car_new():
 
     return render_template("admin_car_form.html")
 
+@app.route("/admin/cars/<int:car_id>/delete", methods=["POST"])
+@login_required
+def admin_car_delete(car_id):
+    car = Car.query.get_or_404(car_id)
+
+    if car.bookings:
+        return "Can't delete a car that has booking history.", 400
+
+    db.session.delete(car)
+    db.session.commit()
+    return redirect(url_for("admin_cars"))
+
 if __name__ == "__main__":
     app.run(debug=True)
-

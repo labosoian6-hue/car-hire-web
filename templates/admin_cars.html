@@ -10,7 +10,10 @@
         {% if car.image_filename %}
           <img src="{{ url_for('static', filename='uploads/' + car.image_filename) }}" style="width:60px; height:60px; object-fit:cover; border-radius:6px;">
         {% endif %}
-        {{ car.make }} {{ car.model }} <span class="price">${{ car.day_rate }}/day</span>
+        {{ car.make }} {{ car.model }} <span class="price">${{ car.week_rate }}/week</span>
+        <form method="post" action="{{ url_for('admin_car_delete', car_id=car.id) }}" onsubmit="return confirm('Delete this car?');" style="display:inline;">
+          <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
       </li>
     {% endfor %}
   </ul>
