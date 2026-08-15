@@ -4,14 +4,13 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
 
-
 class Car(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     make = db.Column(db.String(80), nullable=False)
     model = db.Column(db.String(80), nullable=False)
     week_rate = db.Column(db.Float, nullable=False)
-    image_filename = db.Column(db.String(255))
     bookings = db.relationship("Booking", backref="car")
+    photos = db.relationship("CarPhoto", backref="car")
 
     def is_available(self, start, end):
         for booking in self.bookings:
@@ -19,6 +18,10 @@ class Car(db.Model):
                 return False
         return True
 
+class CarPhoto(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    car_id = db.Column(db.Integer, db.ForeignKey("car.id"), nullable=False)
+    filename = db.Column(db.String(255), nullable=False)
 
 class Renter(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -27,7 +30,6 @@ class Renter(db.Model):
     phone = db.Column(db.String(40))
     bookings = db.relationship("Booking", backref="renter")
 
-
 class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     car_id = db.Column(db.Integer, db.ForeignKey("car.id"), nullable=False)
@@ -35,14 +37,13 @@ class Booking(db.Model):
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date, nullable=False)
     status = db.Column(db.String(20), nullable=False, default="pending")
+    notes = db.Column(db.Text)
     payments = db.relationship("Payment", backref="booking")
-
 
 class Payment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     booking_id = db.Column(db.Integer, db.ForeignKey("booking.id"), nullable=False)
     amount = db.Column(db.Float, nullable=False)
-
 
 class AdminUser(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)

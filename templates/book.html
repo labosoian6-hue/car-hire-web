@@ -1,6 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
   <h2>Book {{ car.make }} {{ car.model }}</h2>
+
+  {% if booked_ranges %}
+    <div class="card" style="margin-bottom:16px;">
+      <p><strong>Already booked:</strong></p>
+      <ul>
+        {% for b in booked_ranges %}
+          <li>{{ b.start_date.strftime('%d %b %Y') }} &ndash; {{ b.end_date.strftime('%d %b %Y') }}</li>
+        {% endfor %}
+      </ul>
+      <p style="font-size:0.9em; color:#666;">Please pick dates outside these ranges.</p>
+    </div>
+  {% endif %}
+
   <form method="post">
     <label>Your name</label>
     <input type="text" name="name" required>

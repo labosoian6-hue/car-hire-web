@@ -2,11 +2,38 @@
 {% block content %}
   <p><a href="{{ url_for('home') }}">&larr; Back to all cars</a></p>
   <div class="card">
-    {% if car.image_filename %}
-      <img src="{{ url_for('static', filename='uploads/' + car.image_filename) }}" style="width:100%; max-width:400px; border-radius:10px;">
+    {% if car.photos %}
+      <img src="{{ url_for('static', filename='uploads/' + car.photos[0].filename) }}"
+           style="width:100%; max-width:400px; border-radius:10px; cursor:pointer;"
+           onclick="showPhoto(this.src)">
+      {% if car.photos|length > 1 %}
+        <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+          {% for photo in car.photos[1:] %}
+            <img src="{{ url_for('static', filename='uploads/' + photo.filename) }}"
+                 style="width:80px; height:80px; object-fit:cover; border-radius:6px; cursor:pointer;"
+                 onclick="showPhoto(this.src)">
+          {% endfor %}
+        </div>
+      {% endif %}
     {% endif %}
     <h2>{{ car.make }} {{ car.model }}</h2>
     <p class="price">${{ car.week_rate }}/week</p>
     <a href="{{ url_for('book_car', car_id=car.id) }}" class="btn">Book this car</a>
   </div>
+
+  <div id="photo-overlay" onclick="hidePhoto()"
+       style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:1000; align-items:center; justify-content:center; cursor:zoom-out;">
+    <img id="photo-overlay-img" src="" style="max-width:90%; max-height:90%; border-radius:8px;">
+  </div>
+
+  <script>
+    function showPhoto(src) {
+      document.getElementById("photo-overlay-img").src = src;
+      document.getElementById("photo-overlay").style.display = "flex";
+    }
+
+    function hidePhoto() {
+      document.getElementById("photo-overlay").style.display = "none";
+    }
+  </script>
 {% endblock %}

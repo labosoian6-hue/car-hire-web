@@ -9,6 +9,13 @@
     <button type="submit" class="btn">Approve booking</button>
   </form>
 {% endif %}
+
+  <h3>Message to customer (e.g. pickup address)</h3>
+  <form method="post" action="{{ url_for('admin_booking_notes', booking_id=booking.id) }}">
+    <textarea name="notes" rows="4" style="width:100%; max-width:400px;">{{ booking.notes or '' }}</textarea><br>
+    <button type="submit" class="btn">Save &amp; notify customer</button>
+  </form>
+
   <h3>Payments</h3>
   <ul>
     {% for p in booking.payments %}
